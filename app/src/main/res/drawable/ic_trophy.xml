@@ -1,0 +1,52 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Trophy Base -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M7,7v2h10v-2Z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M10,9h4v2h-4V9Z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M9,11h6v2H9v-2Z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M7,13h10v2H7v-2Z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M8,15h8v2H8v-2Z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M8,17h8v2H8v-2Z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M8,19h8v2H8v-2Z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M9,21h6v2H9v-2Z" />
+
+    <!-- Handles -->
+    <path
+        android:fillColor="#FFC800"
+        android:pathData="M7,9v4h10v-4L12,3L7,9Z" />
+
+    <!-- Details -->
+    <path
+        android:fillColor="#FFC800"
+        android:pathData="M11,9h2v2h-2V9Z" />
+    <path
+        android:fillColor="#FFC800"
+        android:pathData="M11,15h2v2h-2v-2Z" />
+    <path
+        android:fillColor="#FFC800"
+        android:pathData="M11,17h2v2h-2v-2Z" />
+    <path
+        android:fillColor="#FFC800"
+        android:pathData="M11,19h2v2h-2v-2Z" />
+
+</vector>

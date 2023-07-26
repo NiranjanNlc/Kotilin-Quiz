@@ -1,0 +1,94 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext
+            {
+                versions = [
+                        mockito    : "5.0.0",
+                        mockkito   : "1.12.0",
+                        junit      : "4.12",
+                        junit5     : "5.7.2",
+                        nav        : "2.5.1",
+                        hilt       : "2.47",
+                        lifecycle  : "2.3.1",
+                        espreso    : "3.4.0",
+                        androidtest: "1.4.0",
+                        fragment   : "1.5.2",
+                        coroutines : "1.5.2",
+                        ktlint     : "7.1.0",
+                        glide      : "4.12.0",
+                        roboelectric: "4.10.3",
+                ]
+                testing = [
+                        hilt            : "com.google.dagger:hilt-android-testing:${versions.hilt}",
+                        hiltKapt        : "com.google.dagger:hilt-android-compiler:${versions.hilt}",
+                        hiltAndroidTest : "com.google.dagger:hilt-android-testing:${versions.hilt}",
+                        hiltAndroidKapt : "com.google.dagger:hilt-android-compiler:${versions.hilt}",
+                        fragment         : "androidx.fragment:fragment-testing:${versions.fragment}",
+                        core             : "androidx.test:core-ktx:${versions.androidtest}",
+                        //espresso sting ko yeha bhanda maathi ko use bhako cha
+                        mockkito         : "io.mockk:mockk-android:${versions.mockkito}",
+                        mockito          : "org.mockito.kotlin:mockito-kotlin:${versions.mockito}",
+                        junit            : "junit:junit:${versions.junit}",
+                        roboelectric     : "org.robolectric:robolectric:${versions.roboelectric}",
+                        //junit testing ko laggi maathi ko tinta ko use bhako cha
+                        junit5           : "org.junit.jupiter:junit-jupiter-api:${versions.junit5}",
+                        junit5engine     : "org.junit.jupiter:junit-jupiter-engine:${versions.junit5}",
+                        junitext         : "androidx.test.ext:junit-ktx: 1.1.5",
+                        espresso         : "androidx.test.espresso:espresso-core:${versions.espreso}",
+                        androidtest      : "androidx.test.ext:junit:1.1.5",
+                        androidtestrules : "androidx.test:rules:${versions.androidtest}",
+                        androidtestrunner: "androidx.test:runner:${versions.androidtest}",
+                        nav              : "androidx.navigation:navigation-testing:${versions.nav}",
+                        coroutines       : "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines}"
+                ]
+                navigation = [
+                        fragment: "androidx.navigation:navigation-fragment-ktx:${versions.nav}",
+                        ui      : "androidx.navigation:navigation-ui-ktx:${versions.nav}"
+                ]
+                di = [
+                        hilt     : "com.google.dagger:hilt-android:${versions.hilt}",
+                        hiltKapt : "com.google.dagger:hilt-compiler:${versions.hilt}",
+                        viewModel: "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}",
+                        livedata : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}",
+                        fragment : "androidx.fragment:fragment-ktx:1.3.6"
+                ]
+                firebase = [
+                        bom      : "com.google.firebase:firebase-bom:28.4.1",
+                        analytics: "com.google.firebase:firebase-analytics-ktx:19.0.1",
+                        database : 'com.google.firebase:firebase-database-ktx',
+                        storage  : 'com.google.firebase:firebase-storage-ktx',
+                        auth     : 'com.google.firebase:firebase-auth-ktx'
+                ]
+                appwrite = [
+                        core   : "io.appwrite:sdk-for-android:2.0.0",
+                        android: "io.appwrite:appwrite-android:0.10.0"
+                ]
+                coroutines = [
+                        core    : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
+                        android : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}",
+                        firebase: "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0"
+                ]
+                store = [
+                        datastore: "androidx.datastore:datastore-preferences:1.0.0"
+                ]
+                room = [
+                        core   : "androidx.room:room-ktx:2.3.0",
+                        runtime: "androidx.room:room-runtime:2.3.0",
+                        kapt   : "androidx.room:room-compiler:2.3.0"
+                ]
+                glide = [
+                        core    : "com.github.bumptech.glide:glide:${versions.glide}",
+                        compiler: "com.github.bumptech.glide:compiler:${versions.glide}"
+                ]
+            }
+    repositories {
+        google()
+    }
+}
+plugins {
+    id 'com.android.application' version '8.0.1' apply false
+    id 'com.android.library' version '8.0.1' apply false
+    id 'org.jetbrains.kotlin.android' version '1.9.0' apply false
+    //dagger hilt
+    id 'com.google.dagger.hilt.android' version '2.47' apply false
+}
