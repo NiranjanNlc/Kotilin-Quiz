@@ -3,7 +3,6 @@ package org.niranjan.quiz
 import android.util.Log
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
-import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -101,7 +100,7 @@ class CreateQuizUseCaseTest {
     fun `test startQuiz with valid user and questions`() {
         val user = "JohnDoe"
 
-        `when`(questionRepository.getAllQuestions()).thenReturn(questions)
+        `when`(questionRepository.putallQuestion()).thenReturn(questions)
          `when`(quizRepository.createQuiz(any())).thenReturn(QuizEntity("1",
              user,
              questions,
@@ -121,7 +120,7 @@ class CreateQuizUseCaseTest {
     @Test
     fun `test startQuiz with valid user and no questions`() {
         val user = "JohnDoe"
-        `when`(questionRepository.getAllQuestions()).thenReturn(emptyList())
+        `when`(questionRepository.putallQuestion()).thenReturn(emptyList())
 
         val quizEntity = createQuizUseCase.startQuiz(user)
 
@@ -131,7 +130,7 @@ class CreateQuizUseCaseTest {
     @Test
     fun `test startQuiz with empty user`() {
         val user = ""
-        `when`(questionRepository.getAllQuestions()).thenReturn(emptyList())
+        `when`(questionRepository.putallQuestion()).thenReturn(emptyList())
 
         val quizEntity = createQuizUseCase.startQuiz(user)
 
@@ -159,7 +158,7 @@ class CreateQuizUseCaseTest {
     fun `test getRandomQuizQuestions with more questions requested than available`() {
         val questionCount = 10
 
-        `when`(questionRepository.getAllQuestions()).thenReturn(questions)
+        `when`(questionRepository.putallQuestion()).thenReturn(questions)
 
         val randomQuestions = createQuizUseCase.getRandomQuizQuestions(questionCount)
 
@@ -169,7 +168,7 @@ class CreateQuizUseCaseTest {
     @Test
     fun `test getRandomQuizQuestions with empty question list`() {
         val questionCount = 5
-        `when`(questionRepository.getAllQuestions()).thenReturn(emptyList())
+        `when`(questionRepository.putallQuestion()).thenReturn(emptyList())
 
         val randomQuestions = createQuizUseCase.getRandomQuizQuestions(questionCount)
 

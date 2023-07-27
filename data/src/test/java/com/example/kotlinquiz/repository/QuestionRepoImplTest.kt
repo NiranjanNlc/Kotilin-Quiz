@@ -5,7 +5,6 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.example.kotlinquiz.local.AppDatabase
 import com.example.kotlinquiz.local.dao.QuestionDao
-import com.example.kotlinquiz.local.entity.Question
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -68,7 +67,7 @@ class QuestionRepoImplTest {
 
     @Test
     fun testGetAllQuestions() {
-     val listofqs = questionRepo.getAllQuestions()
+     val listofqs = questionRepo.putallQuestion()
      val firstQuestion = QuestionEntity(
             questionId = "q1",
             text = "What is a nullable type in Kotlin?",

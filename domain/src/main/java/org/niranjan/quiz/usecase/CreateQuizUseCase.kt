@@ -43,7 +43,7 @@ class CreateQuizUseCase(
     }
 
     public fun getRandomQuizQuestions( questionCount: Int): List<QuestionEntity> {
-        val allQuestions = questionRepository.getAllQuestions()
+        val allQuestions = questionRepository.putallQuestion()
         return allQuestions.shuffled().take(questionCount)
     }
 

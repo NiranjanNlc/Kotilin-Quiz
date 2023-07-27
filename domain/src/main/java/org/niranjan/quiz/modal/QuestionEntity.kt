@@ -7,5 +7,5 @@ data class QuestionEntity(
     val difficultyLevel: Int,
     val category: String,
     val correctAnswer: AnswerEntity? = null,
-    val isAnswered: Boolean = false,
+    var isAnswered: Boolean = false,
 )

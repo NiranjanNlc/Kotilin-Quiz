@@ -9,6 +9,7 @@ interface QuestionRepository {
     fun updateQuestionAsAnswered(question: QuestionEntity)
     fun deleteQuestion(questionId: String)
     fun getQuestionById(questionId: String): QuestionEntity?
-    fun getAllQuestions(): List<QuestionEntity>
+    fun putallQuestion(): List<QuestionEntity>
     fun getQuestionAnswers(questionId: String): List<AnswerEntity>
+    fun getAllquestion(): List<QuestionEntity>
 }

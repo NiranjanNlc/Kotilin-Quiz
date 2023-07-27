@@ -59,7 +59,7 @@ class QuestionRepoImpl @Inject constructor(private val questionDao: QuestionDao,
              )
          }
     }
-    override fun getAllQuestions(): List<QuestionEntity> {
+    override fun putallQuestion(): List<QuestionEntity> {
             val jsonString =   readJsonFileFromAssets(this.context)
             Log.i(" string ", jsonString)
             val json = JSONObject(jsonString)
@@ -138,5 +138,19 @@ class QuestionRepoImpl @Inject constructor(private val questionDao: QuestionDao,
             }
         }
         return emptyList()
+    }
+
+    override fun getAllquestion(): List<QuestionEntity> {
+        return questionDao.getAllQuestion().map {
+            QuestionEntity(
+                it.questionId,
+                it.text,
+                it.answers,
+                it.difficultyLevel,
+                it.category,
+                it.correctAnswer,
+                it.isAnswered
+            )
+        }
     }
 }
