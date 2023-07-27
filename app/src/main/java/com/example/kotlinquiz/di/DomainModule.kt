@@ -8,8 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import org.niranjan.quiz.repo.QuestionRepository
 import org.niranjan.quiz.repo.QuizRepository
 import org.niranjan.quiz.repo.ScoreRepository
+import org.niranjan.quiz.repo.UserRepository
 import org.niranjan.quiz.usecase.CreateQuizUseCase
 import org.niranjan.quiz.usecase.QuestionAnswerUseCase
+import org.niranjan.quiz.usecase.SubmitQuizResultUseCase
 
 
 @Module
@@ -26,4 +28,8 @@ class DomainModule {
                                       questionRepository: QuestionRepository,
                                         scoreRepository: ScoreRepository
     ) = QuestionAnswerUseCase(quizRepository,questionRepository,scoreRepository)
+    @Provides
+    fun provideFinalResultuseCase( quizRepository: QuizRepository,
+                                      scoreRepository: ScoreRepository
+    ) = SubmitQuizResultUseCase(quizRepository,scoreRepository)
 }

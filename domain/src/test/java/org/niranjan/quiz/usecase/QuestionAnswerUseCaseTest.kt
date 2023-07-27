@@ -2,7 +2,6 @@ package org.niranjan.quiz.usecase
 
 import org.junit.Assert.*
 
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -11,11 +10,10 @@ import org.mockito.MockitoAnnotations
 import org.niranjan.quiz.modal.AnswerEntity
 import org.niranjan.quiz.modal.QuestionEntity
 import org.niranjan.quiz.modal.QuizEntity
-import org.niranjan.quiz.modal.UserEntity
 import org.niranjan.quiz.repo.QuestionRepository
 import org.niranjan.quiz.repo.QuizRepository
 import org.niranjan.quiz.repo.ScoreRepository
-import org.niranjan.quiz.result.QuestionAnswerResult
+import org.niranjan.quiz.result.AnswerResult
 
 class QuestionAnswerUseCaseTest {
 
@@ -100,8 +98,8 @@ class QuestionAnswerUseCaseTest {
         val result = questionAnswerUseCase.getFirstQuestion()
 
         // Verify
-        assertTrue(result is QuestionAnswerResult.Success)
-        assertTrue(questions.contains((result as QuestionAnswerResult.Success).question))
+        assertTrue(result is AnswerResult.Success)
+        assertTrue(questions.contains((result as AnswerResult.Success).question))
     }
 
     @Test
@@ -116,8 +114,8 @@ class QuestionAnswerUseCaseTest {
         val result = questionAnswerUseCase.answerQuestionAndGetNext(questionId, true)
 
         // Verify
-        assertTrue(result is QuestionAnswerResult.Success)
-        assertNotNull((result as QuestionAnswerResult.Success).question)
+        assertTrue(result is AnswerResult.Success)
+        assertNotNull((result as AnswerResult.Success).question)
     }
 
     @Test
@@ -132,8 +130,8 @@ class QuestionAnswerUseCaseTest {
         val result = questionAnswerUseCase.answerQuestionAndGetNext(questionId, false)
 
         // Verify
-        assertTrue(result is QuestionAnswerResult.Success)
-        assertNotNull((result as QuestionAnswerResult.Success).question)
+        assertTrue(result is AnswerResult.Success)
+        assertNotNull((result as AnswerResult.Success).question)
     }
 
     @Test
@@ -149,7 +147,7 @@ class QuestionAnswerUseCaseTest {
         val result = questionAnswerUseCase.answerQuestionAndGetNext(questionId, true)
 
         // Verify
-        assertTrue(result is QuestionAnswerResult.Failure)
+        assertTrue(result is AnswerResult.Failure)
     }
     @Test
     fun `test getNextQuestion when it's the last question`() {
@@ -169,8 +167,8 @@ class QuestionAnswerUseCaseTest {
         val result = questionAnswerUseCase.answerQuestionAndGetNext("3", true)
 
         // Verify
-        assertTrue(result is QuestionAnswerResult.Success)
-        assertNull((result as QuestionAnswerResult.Success).question)
+        assertTrue(result is AnswerResult.Success)
+        assertNull((result as AnswerResult.Success).question)
         assertTrue(result.isLastQuestion)
     }
 }

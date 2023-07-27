@@ -7,15 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.viewModels
 import com.example.kotlinquiz.databinding.FragmentResultBinding
+import com.example.kotlinquiz.ui.main.util.ResultState
+import com.example.kotlinquiz.ui.main.viewmodal.QuizViewModel
+import com.example.kotlinquiz.ui.main.viewmodal.ResultViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ResultFragment : Fragment() {
 
     companion object {
         fun newInstance() = ResultFragment()
     }
     
-    private lateinit var binding : FragmentResultBinding 
+    private lateinit var binding : FragmentResultBinding
+
+    private val viewModel: ResultViewModel by viewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,17 +36,25 @@ class ResultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //Todo: connect to each view in the layout through its id
         val tvName: TextView = binding.tvName
         val tvScore: TextView = binding.tvScore
         val btnFinish: Button = binding.btnFinish
-//        reterive the value though the viewmodeland fragment
-//        tvName.text = userName
-//        val userName = intent.getStringExtra(Constants.USER_NAME)
-//        val totalQuestions = intent.getIntExtra(Constants.TOTAL_QUESTIONS, 0)
-//        val correctAnswers = intent.getIntExtra(Constants.CORRECT_ANSWERS, 0)
 
-//        tvScore.text = "Your Score is $correctAnswers out of $totalQuestions."
+        viewModel.resultState.observe(viewLifecycleOwner){
+            when(it){
+                is ResultState.Success -> {
+                    tvName.text = it.user
+                    tvScore.text = "Your Score is ${it.score}  "
+                }
+                is ResultState.Failure -> {
+                    tvName.text = it.errorMessage
+                }
+
+                else -> {
+                    tvName.text = "Loading......"
+                }
+            }
+        }
 
         btnFinish.setOnClickListener {
            // transfer to the welcome fragment using navigation

@@ -5,12 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.kotlinquiz.ui.main.util.AnswerState
 import com.example.kotlinquiz.ui.main.util.QuizPrefsHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.niranjan.quiz.modal.QuestionEntity
+import org.niranjan.quiz.result.AnswerResult
 import org.niranjan.quiz.usecase.QuestionAnswerUseCase
 import javax.inject.Inject
 
@@ -20,31 +21,50 @@ class QuizViewModel @Inject constructor(
     private val prefsHelper: QuizPrefsHelper
 ) : ViewModel() {
 
-    private val _currentQuestion = MutableLiveData<QuestionEntity?>()
-    val currentQuestion: LiveData<QuestionEntity?> get() = _currentQuestion
-
-    private val _isLastQuestion = MutableLiveData<Boolean>()
-    val isLastQuestion: LiveData<Boolean> get() = _isLastQuestion
-
-    private val _isAnswered = MutableLiveData<Boolean>()
-    val isAnswered: LiveData<Boolean> get() = _isAnswered
 
     private val _selectedOptionPosition = MutableLiveData<Int>()
     val selectedOptionPosition: LiveData<Int> get() = _selectedOptionPosition
 
-    private var isCorrect: Boolean = false
+
+    private val _answerState  = MutableLiveData<AnswerState>()
+    val answerState: LiveData<AnswerState> get() = _answerState
 
     init {
-        _isLastQuestion.value = false
         _selectedOptionPosition.value = 0
     }
 
     fun getFirstQuestion() {
         viewModelScope.launch(Dispatchers.IO) {
-            val firstqs = useCase.getFirstQuestion()
-            Log.i("startquiz", "getFirstQuestion: $firstqs")
-            withContext(Dispatchers.Main) {
-                _currentQuestion.value = firstqs.first
+            val result = useCase.getFirstQuestion()
+            Log.i("startquiz", "getFirstQuestion: $result")
+            Log.i("startquiz", result.toString())
+            hadleResult(result)
+        }
+    }
+
+    private fun hadleResult(result: AnswerResult) {
+        when (result) {
+            is AnswerResult.Success -> {
+                try {
+                    Log.i("startquiz", "fuck you : $result")
+                    _answerState.postValue(
+                        AnswerState.Success(
+                            result.question,
+                            result.isLastQuestion
+                        )
+                    )
+                    _selectedOptionPosition.postValue(0)
+                } catch (e: Exception) {
+                    Log.i("startquiz", "getFirstQuestion: $e")
+                }
+            }
+
+            is AnswerResult.Failure -> {
+                _answerState.postValue(AnswerState.Failure(result.errorMessage))
+            }
+
+            else -> {
+                Log.i("startquiz", "what he hell : $result")
             }
         }
     }
@@ -53,35 +73,16 @@ class QuizViewModel @Inject constructor(
         _selectedOptionPosition.value = selectedOptionPosition
     }
 
-    fun checkAnswer(selectedOptionPosition: Int): Boolean {
-     try {
-         val currentQuestion = currentQuestion.value ?: return false
-         val correctAnswerPosition = currentQuestion.answers.indexOfFirst { it.isCorrect }
-         _isAnswered.value= true
-         isCorrect = selectedOptionPosition == correctAnswerPosition
-     }
-     catch (e:Exception) {
-         Log.i("startquiz", "checkAnswer: ${e.message}")
-     }
-        return isCorrect
-    }
 
 
-    fun moveToNextQuestion() {
+
+    fun moveToNextQuestion(currentQuestionId: QuestionEntity, isCorrect: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            val nextQuestion = useCase.answerQuestionAndGetNext(
-                currentQuestion.value?.questionId ?: "",
+            val result = useCase.answerQuestionAndGetNext(
+                currentQuestionId,
                 isCorrect
             )
-            if (nextQuestion.second) {
-                _isLastQuestion.postValue(true)
-            }
-            withContext(Dispatchers.Main) {
-                _currentQuestion.value = nextQuestion.first
-                _selectedOptionPosition.value = 0 // Reset selected option for the next question
-                _isLastQuestion.value = nextQuestion.second!! // Check if it's the last question
-                _isAnswered.value= false// Check if it's the last question
-            }
+            hadleResult(result)
         }
     }
 

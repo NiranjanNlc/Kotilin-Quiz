@@ -16,11 +16,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.kotlinquiz.R
 import com.example.kotlinquiz.databinding.FragmentQuizBinding
-import com.example.kotlinquiz.local.entity.Answer
+import com.example.kotlinquiz.ui.main.util.AnswerState
 import com.example.kotlinquiz.ui.main.util.QuizPrefsHelper
 import com.example.kotlinquiz.ui.main.viewmodal.QuizViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.niranjan.quiz.modal.AnswerEntity
+import org.niranjan.quiz.modal.QuestionEntity
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -28,6 +29,8 @@ class QuizFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentQuizBinding
     private val viewModel: QuizViewModel by viewModels()
+
+    private lateinit var currentQuestion : QuestionEntity
 
     @Inject
     lateinit var prefsHelper: QuizPrefsHelper
@@ -50,8 +53,8 @@ class QuizFragment : Fragment(), View.OnClickListener {
         }
 
         setupClickListeners()
-        viewModel.getFirstQuestion()
         observeViewModel()
+        viewModel.getFirstQuestion()
     }
 
     private fun setupClickListeners() {
@@ -62,27 +65,39 @@ class QuizFragment : Fragment(), View.OnClickListener {
     }
 
     private fun observeViewModel() {
-        viewModel.currentQuestion.observe(viewLifecycleOwner) { question ->
-            question?.let {
-                binding.tvQuestion.text = it.text
-                setOptionTexts(it.answers)
-            }
-            setDefaultOptionsView()
-        }
+        viewModel.answerState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is AnswerState.Success -> {
+                    if (state.isLastQuestion) {
+                        goToNextFragment()
+                    }
+                    if (state.question != null) {
+                        currentQuestion = state.question
+                        setQuestion(currentQuestion)
+                    }
 
-        viewModel.isAnswered.observe(viewLifecycleOwner) { isLastQuestion ->
-            binding.btnSubmit.text = if (isLastQuestion) {
-                "Get next question"
-            } else {
-                "Answer"
-            }
-        }
-        viewModel.isLastQuestion.observe(viewLifecycleOwner) { isLastQuestion ->
-            if (isLastQuestion) {
-               goToNextFragment()
+                }
+                is AnswerState.Failure -> {
+                    // Handle failure state if needed
+                    Toast.makeText(requireContext(), state.errorMessage, Toast.LENGTH_SHORT).show()
+                }
+                is AnswerState.Loading -> {
+                    // Handle loading state if needed
+                    Toast.makeText(requireContext()," Answer Please ", Toast.LENGTH_SHORT).show()
+                    // For example, you might show a progress bar
+                }
             }
         }
     }
+
+    private fun setQuestion(question: QuestionEntity?) {
+        question?.let {
+            binding.tvQuestion.text = it.text
+            setOptionTexts(it.answers)
+        }
+        setDefaultOptionsView()
+    }
+
     private fun goToNextFragment() {
         Log.i("WelcomeFragment", "goToNextFragment: ")
         //navigate to the quiz fragment based on navigation component
@@ -116,13 +131,6 @@ class QuizFragment : Fragment(), View.OnClickListener {
         )
     }
 
-    private fun setAnswerView(view: TextView, drawableView: Int) {
-        view.background = ContextCompat.getDrawable(
-            requireContext(),
-            drawableView
-        )
-    }
-
     override fun onClick(view: View) {
         when (view.id) {
             binding.tvOptionOne.id -> {
@@ -148,20 +156,23 @@ class QuizFragment : Fragment(), View.OnClickListener {
     private fun handleSubmission() {
         val selectedOptionPosition = viewModel.selectedOptionPosition.value ?: 0
         if (selectedOptionPosition != 0) {
-            if (viewModel.isAnswered.value == true) {
+            val isCorrect = checkAnswer(selectedOptionPosition)
+            Log.i("startquiz", "qs status : ${currentQuestion.isAnswered} ")
+            if (currentQuestion.isAnswered == true) {
                 Log.i("startquiz", "handleSubmission:  answered ")
-                viewModel.moveToNextQuestion()
+                viewModel.moveToNextQuestion(currentQuestion, isCorrect)
                 enableDisableOptionClicks(true)
                 setDefaultOptionsView()
             }
             else
             {
                 Log.i("startquiz", "handleSubmission: not answered ")
-                val isCorrect = viewModel.checkAnswer(selectedOptionPosition)
                 Log.i("startquiz", "handleSubmission: $isCorrect")
                 showAnswerFeedback(isCorrect)
                 // Disable clicking on options after submitting the answer
                 enableDisableOptionClicks(false)
+                currentQuestion.isAnswered = true
+                binding.btnSubmit.text = "Get next question"
             }
 
 
@@ -187,11 +198,11 @@ class QuizFragment : Fragment(), View.OnClickListener {
                 R.drawable.incorrect_option_border_bg
             )
             // Highlight the correct answer if the user selected the wrong one
-            val correctAnswerPosition = viewModel.currentQuestion.value?.answers?.indexOfFirst { it.isCorrect }
-                ?: 0
+            val correctAnswerPosition = currentQuestion.answers.indexOfFirst { it.isCorrect }
+            Log.i("startquiz", "correcrtAnswerPosition: $correctAnswerPosition ")
             val correctAnswerView = getOptionViewByPosition(correctAnswerPosition)
             Log.i("startquiz", "handleSubmission snser checking : $correctAnswerView "+ correctAnswerPosition)
-            correctAnswerView?.background = ContextCompat.getDrawable(
+            correctAnswerView.background = ContextCompat.getDrawable(
                 requireContext(),
                 R.drawable.correct_option_border_bg
             )
@@ -205,11 +216,18 @@ class QuizFragment : Fragment(), View.OnClickListener {
     }
 
     private fun getOptionViewByPosition(position: Int): TextView {
+
         return when (position) {
+            0->  binding.tvOptionOne
             1 -> binding.tvOptionOne
             2 -> binding.tvOptionTwo
             3 -> binding.tvOptionThree
             else -> throw IllegalArgumentException("Invalid option position")
         }
+    }
+
+    fun checkAnswer(selectedOptionPosition: Int): Boolean {
+        val correctAnswerPosition = currentQuestion.answers.indexOfFirst { it.isCorrect }
+        return selectedOptionPosition==correctAnswerPosition
     }
 }

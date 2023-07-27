@@ -29,12 +29,17 @@ class QuestionRepoImpl @Inject constructor(private val questionDao: QuestionDao,
     }
 
     override fun updateQuestionAsAnswered(question: QuestionEntity) {
-        questionDao.getQuestionById(question.questionId).let {
-            if (it != null) {
-                questionDao.updateQuestion( it.copy(isAnswered = false))
-            }    
+        val check1 = questionDao.getQuestionById(question.questionId)
+        questionDao.updateQuestion( check1?.copy(isAnswered = true)!!)
+        val check2  = questionDao.getQuestionById(question.questionId)
+        Log.i("updateQuestionAsAnswered", "$check1 updateQuestionAsAnswered: Marked as answered: $check2")
+
+        val check = questionDao.getAllQuestion()
+        check.forEach{
+            Log.i("getAllquestion", "getAllquestion: Marked as answered: ${it.text} snd ${it.isAnswered}")
         }
-        
+        Log.i("updateQuestionAsAnswered", "updateQuestionAsAnswered: Marked as answered: $question")
+        Log.i("updateQuestionAsAnswered", "updateQuestionAsAnswered: Marked as answered: $check")
     }
 
     override fun deleteQuestion(questionId: String) {
@@ -66,7 +71,7 @@ class QuestionRepoImpl @Inject constructor(private val questionDao: QuestionDao,
             val questionsArray = json.getJSONArray("questions")
             val questionsList = mutableListOf<Question>()
 
-            for (i in 0 until questionsArray.length()) {
+            for (i in 0 until 5) {
                 val questionJson = questionsArray.getJSONObject(i)
                 val questionId = questionJson.getString("questionId")
                 val text = questionJson.getString("text")
@@ -141,7 +146,12 @@ class QuestionRepoImpl @Inject constructor(private val questionDao: QuestionDao,
     }
 
     override fun getAllquestion(): List<QuestionEntity> {
-        return questionDao.getAllQuestion().map {
+        val check = questionDao.getAllQuestion()
+        check.forEach{
+            Log.i("getAllquestion", "getAllquestion: Marked as answered: ${it.text} snd ${it.isAnswered}")
+        }
+        Log.i("getAllquestion", "getAllquestion: Marked as answered: $check ")
+        return check.map {
             QuestionEntity(
                 it.questionId,
                 it.text,
