@@ -30,4 +30,6 @@ interface QuizDao {
     fun getQuizScores(quizId: String): List<Score>
     @Query("SELECT * FROM quizzes where isFinished = 0 ")
     fun getAllUnfineshedQuiz(): List<Quiz>
+    @Query("SELECT * FROM quizzes where isFinished = 1 ")
+    fun getAllfineshedQuiz(): List<Quiz>
 }

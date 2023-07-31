@@ -13,14 +13,12 @@ class SubmitQuizResultUseCase(
     private val scoreRepository: ScoreRepository,
 ) {
     fun submitQuizResult( ): FinalResult{
-        val quiz = quizRepository.getCurrentQuiz()
+        val quiz = quizRepository.getLastFinishedQuiz()
         if (quiz != null) {
-            val quiz1 = quiz.copy(isFinished = true)
-            quizRepository.updateQuiz(quiz1)
             val score = scoreRepository.getScoresByQuiz(quiz.id)
                 .sumOf { it.score } * 10
             Log.i("result", "submitQuizResult: $score")
-        return FinalResult.Success(quiz1.userId, score ?: 0)
+        return FinalResult.Success(quiz.userId, score ?: 0)
         } else {
             return FinalResult.Failure("Quiz not found")
         }

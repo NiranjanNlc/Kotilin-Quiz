@@ -18,7 +18,7 @@ import com.example.kotlinquiz.util.MyCustomConverter
                         Quiz::class,
                             Score::class,
                                 Question::class,
-                             Answer:: class], version = 9, exportSchema = false)
+                             Answer:: class], version = 11, exportSchema = false)
 @TypeConverters(MyCustomConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
