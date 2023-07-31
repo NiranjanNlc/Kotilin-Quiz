@@ -121,6 +121,7 @@ class QuizFragment : Fragment(), View.OnClickListener {
                 R.drawable.default_option_border_bg
             )
         }
+        binding.btnSubmit.text = " Submit "
     }
     private fun setSelectedOptionView(view: TextView, selectedOptionNum: Int) {
         setDefaultOptionsView()
