@@ -100,6 +100,7 @@ class QuizFragment : Fragment(), View.OnClickListener {
 
     private fun goToNextFragment() {
         Log.i("WelcomeFragment", "goToNextFragment: ")
+        viewModel.resetStaet()
         //navigate to the quiz fragment based on navigation component
         findNavController().navigate(R.id.action_quizFragment_to_resultFragment)
     }

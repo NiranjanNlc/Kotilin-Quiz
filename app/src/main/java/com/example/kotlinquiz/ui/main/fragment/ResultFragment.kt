@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.kotlinquiz.R
 import com.example.kotlinquiz.databinding.FragmentResultBinding
 import com.example.kotlinquiz.ui.main.util.ResultState
 import com.example.kotlinquiz.ui.main.viewmodal.QuizViewModel
@@ -57,7 +59,7 @@ class ResultFragment : Fragment() {
         }
 
         btnFinish.setOnClickListener {
-           // transfer to the welcome fragment using navigation
+            findNavController().navigate(R.id.action_resultFragment_to_welcomeFragment)
         }
     }
 

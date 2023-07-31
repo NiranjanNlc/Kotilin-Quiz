@@ -29,7 +29,7 @@ class WelcomeFragment : Fragment() {
     @Inject
     lateinit var prefsHelper: QuizPrefsHelper
     lateinit var binding: FragmentWelcomeBinding
-    private var shouldNavigateTonext = false
+//    private var shouldNavigateTonext = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,13 +74,16 @@ class WelcomeFragment : Fragment() {
                     // Show error message in the UI
                     Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
                 }
+
+                else -> println(" arey waha ")
             }
         })
-        if (shouldNavigateTonext) goToNextFragment()
+//        if (shouldNavigateTonext) goToNextFragment()
     }
 
     private fun goToNextFragment() {
         Log.i("WelcomeFragment", "goToNextFragment: ")
+        viewModel.resetquizState()
         //navigate to the quiz fragment based on navigation component
         findNavController().navigate(R.id.action_welcomeFragment_to_quizFragment)
     }
