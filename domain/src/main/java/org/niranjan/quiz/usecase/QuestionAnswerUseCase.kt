@@ -52,7 +52,7 @@ class QuestionAnswerUseCase(
         Log.i("result", "updateScoreForQuiz: ${quizScores?.sumBy { it.score }}")
         for (score in quizScores) {
             val newScoreValue = score.score + 1
-            scoreRepository.saveScore(score.copy(score = newScoreValue))
+            scoreRepository.updateScore(score.copy(score = newScoreValue))
         }
     }
 

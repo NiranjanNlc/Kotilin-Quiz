@@ -20,8 +20,9 @@ class DomainModule {
 
     @Provides
     fun providesCreateQuestionUseCase( quizRepository: QuizRepository,
-                                       questionRepository: QuestionRepository ): CreateQuizUseCase
-    = CreateQuizUseCase(quizRepository , questionRepository )
+                                       questionRepository: QuestionRepository ,
+                                        scoreRepository: ScoreRepository): CreateQuizUseCase
+    = CreateQuizUseCase(quizRepository , questionRepository , scoreRepository )
     //proivdes QuestionAnswerUseCase
     @Provides
     fun provideQuestionAnsweruseCase( quizRepository: QuizRepository,

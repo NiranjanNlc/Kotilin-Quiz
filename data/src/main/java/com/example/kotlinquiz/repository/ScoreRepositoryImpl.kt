@@ -11,6 +11,11 @@ class ScoreRepositoryImpl(private val scoreDao: ScoreDao) : ScoreRepository {
         )
     }
 
+    override fun updateScore(score: ScoreEntity) {
+         scoreDao.updateScore(Score(score.scorId,score.userId,score.quizId,score.score)
+        )
+    }
+
     override fun getScoreByQuizAndUser(
         quizId: String,
         userId: String
@@ -31,5 +36,6 @@ class ScoreRepositoryImpl(private val scoreDao: ScoreDao) : ScoreRepository {
     override fun gethighestFivecore(): List<ScoreEntity> {
         TODO("Not yet implemented")
     }
+
 
 }

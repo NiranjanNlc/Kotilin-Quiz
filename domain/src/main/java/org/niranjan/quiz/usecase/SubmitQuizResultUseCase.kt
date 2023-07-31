@@ -14,13 +14,13 @@ class SubmitQuizResultUseCase(
 ) {
     fun submitQuizResult( ): FinalResult{
         val quiz = quizRepository.getCurrentQuiz()
-
         if (quiz != null) {
             val quiz1 = quiz.copy(isFinished = true)
             quizRepository.updateQuiz(quiz1)
-            val score = quiz.let { scoreRepository.getScoresByQuiz(it.id) }
-            Log.i("result", "submitQuizResult: ${score?.sumBy { it.score }}")
-        return FinalResult.Success(quiz1.userId, score?.sumBy { it.score } ?: 0)
+            val score = scoreRepository.getScoresByQuiz(quiz.id)
+                .sumOf { it.score } * 10
+            Log.i("result", "submitQuizResult: $score")
+        return FinalResult.Success(quiz1.userId, score ?: 0)
         } else {
             return FinalResult.Failure("Quiz not found")
         }
