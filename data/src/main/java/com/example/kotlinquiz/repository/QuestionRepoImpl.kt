@@ -9,6 +9,7 @@ import org.niranjan.quiz.modal.QuestionEntity
 import org.niranjan.quiz.repo.QuestionRepository
 import android.content.Context
 import android.util.Log
+import java.util.Random
 import javax.inject.Inject
 
 class QuestionRepoImpl @Inject constructor(private val questionDao: QuestionDao,
@@ -70,8 +71,8 @@ class QuestionRepoImpl @Inject constructor(private val questionDao: QuestionDao,
             val json = JSONObject(jsonString)
             val questionsArray = json.getJSONArray("questions")
             val questionsList = mutableListOf<Question>()
-
-            for (i in 0 until 5) {
+            val randomIndexes = generateRandomIndexes(questionsArray.length(), 10)
+            for (i in randomIndexes) {
                 val questionJson = questionsArray.getJSONObject(i)
                 val questionId = questionJson.getString("questionId")
                 val text = questionJson.getString("text")
@@ -128,7 +129,17 @@ class QuestionRepoImpl @Inject constructor(private val questionDao: QuestionDao,
             )
         }
     }
-
+    private fun generateRandomIndexes(totalQuestions: Int, numberOfQuestions: Int): List<Int> {
+        if (totalQuestions <= numberOfQuestions) {
+            return (0 until totalQuestions).toList()
+        }
+        val random = Random(System.currentTimeMillis())
+        val randomIndexes = mutableSetOf<Int>()
+        while (randomIndexes.size < numberOfQuestions) {
+            randomIndexes.add(random.nextInt(totalQuestions))
+        }
+        return randomIndexes.toList()
+    }
     override fun getQuestionAnswers(questionId: String): List<AnswerEntity> {
         questionDao.getQuestionById(questionId).let {
             if (it != null) {

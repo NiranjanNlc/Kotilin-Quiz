@@ -57,7 +57,7 @@ class QuestionAnswerUseCase(
     }
 
     private fun getNextQuestion(): AnswerResult {
-        val questions = questionRepository.getAllquestion()
+        val questions = questionRepository.getAllquestion().filter { it.isAnswered == false }
         questions.forEach{
             Log.i(TAG, "getNextQuestion: Question: ${it.text} snd ${it.isAnswered}")
         }
