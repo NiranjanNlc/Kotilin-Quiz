@@ -19,8 +19,8 @@ class WelcomeViewModel @Inject constructor(
     private val useCase: CreateQuizUseCase
 ) : ViewModel()
 {
-    private val _quizState = MutableLiveData<QuizState>()
-    val quizState: LiveData<QuizState> get() = _quizState
+    private val _quizState = MutableLiveData<QuizState?>()
+    val quizState: MutableLiveData<QuizState?> get() = _quizState
     fun startQuiz(username: String) {
         Log.i("startquiz", username)
             viewModelScope.launch(Dispatchers.IO) {
@@ -41,4 +41,8 @@ class WelcomeViewModel @Inject constructor(
                 is QuizResult.Failure -> QuizState.Failure(result.error)
             }
         }
+
+    fun resetquizState() {
+        _quizState.value= null
+    }
 }

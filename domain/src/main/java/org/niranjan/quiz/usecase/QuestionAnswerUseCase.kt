@@ -2,6 +2,7 @@ package org.niranjan.quiz.usecase
 
 import android.util.Log
 import org.niranjan.quiz.modal.QuestionEntity
+import org.niranjan.quiz.modal.QuizEntity
 import org.niranjan.quiz.repo.QuestionRepository
 import org.niranjan.quiz.repo.QuizRepository
 import org.niranjan.quiz.repo.ScoreRepository
@@ -16,7 +17,8 @@ class QuestionAnswerUseCase(
 
     fun getFirstQuestion(): AnswerResult {
         Log.i(TAG, "getFirstQuestion: Going to the first question.")
-        return getNextQuestion()
+        val quiz = quizRepository.getCurrentQuiz()
+        return getNextQuestion(quiz)
     }
 
     fun answerQuestionAndGetNext(question:QuestionEntity, correctness: Boolean): AnswerResult {
@@ -34,7 +36,7 @@ class QuestionAnswerUseCase(
                 return AnswerResult.Failure("Failed to update score: ${e.message}")
             }
     }
-        return getNextQuestion()
+        return getNextQuestion(quiz)
     }
 
     private fun markQuestionAsAnswered(answeredQuestion: QuestionEntity) {
@@ -56,8 +58,8 @@ class QuestionAnswerUseCase(
         }
     }
 
-    private fun getNextQuestion(): AnswerResult {
-        val questions = questionRepository.getAllquestion()
+    private fun getNextQuestion(quiz: QuizEntity?): AnswerResult {
+        val questions = questionRepository.getAllquestion().filter { it.isAnswered == false }
         questions.forEach{
             Log.i(TAG, "getNextQuestion: Question: ${it.text} snd ${it.isAnswered}")
         }
@@ -70,6 +72,10 @@ class QuestionAnswerUseCase(
         if (unansweredQuestions.isEmpty()) {
             // Notify that it's the last question
             val isLastQuestion = answeredQuestions.size == (questions.size ?: 0)
+            val quiz1 = quiz?.copy(isFinished = true)
+            if (quiz1 != null) {
+                quizRepository.updateQuiz(quiz1)
+            }
             Log.i(TAG, "getNextQuestion: isLastQuestion: $isLastQuestion")
             return AnswerResult.Success(null, isLastQuestion)
         } else {

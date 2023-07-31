@@ -12,4 +12,5 @@ interface QuizRepository {
     fun getQuizzesByUser(userId: String): List<QuizEntity>
     fun getQuizScores(quizId: String): List<ScoreEntity>
     fun getCurrentQuiz(): QuizEntity?
+    fun getLastFinishedQuiz(): QuizEntity?
     }

@@ -87,4 +87,8 @@ class QuizViewModel @Inject constructor(
         }
     }
 
+    fun resetStaet() {
+        _answerState.value = null
+    }
+
 }

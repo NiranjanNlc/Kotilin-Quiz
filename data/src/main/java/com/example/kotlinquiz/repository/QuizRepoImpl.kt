@@ -88,4 +88,17 @@ class QuizRepoImpl( private val quizDao: QuizDao) : QuizRepository {
         }
         return null
     }
+
+    override fun getLastFinishedQuiz(): QuizEntity? {
+        val quiz= quizDao.getAllfineshedQuiz().last()
+        return QuizEntity(
+            id = quiz.id,
+            userId = quiz.userId,
+            questions = quiz.questions,
+            scores = quiz.scores,
+            startTime = quiz.startTime,
+            duration = quiz.duration,
+            isFinished = quiz.isFinished)
+
+    }
 }
