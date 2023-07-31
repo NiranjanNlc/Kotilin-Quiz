@@ -3,6 +3,7 @@ package com.example.kotlinquiz.local.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.kotlinquiz.local.Score
 
 
@@ -10,6 +11,9 @@ import com.example.kotlinquiz.local.Score
 interface ScoreDao {
     @Insert
     fun saveScore(score : Score)
+
+    @Update
+    fun updateScore(score : Score)
 
     @Query("SELECT * FROM scores WHERE quizId = :quizId AND userId = :userId")
     fun getScoreByQuizAndUser(quizId: String, userId: String): Score?
