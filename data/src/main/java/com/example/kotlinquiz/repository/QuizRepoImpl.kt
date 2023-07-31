@@ -1,6 +1,7 @@
 package com.example.kotlinquiz.repository
 
 import com.example.kotlinquiz.local.dao.QuizDao
+import com.example.kotlinquiz.local.dao.UserDao
 import com.example.kotlinquiz.local.entity.Quiz
 import org.niranjan.quiz.modal.QuizEntity
 import org.niranjan.quiz.modal.ScoreEntity
@@ -18,7 +19,7 @@ class QuizRepoImpl( private val quizDao: QuizDao) : QuizRepository {
             duration = quiz.duration,
             isFinished = quiz.isFinished
         )
-         quizDao.createQuiz(quiz1)
+        quizDao.createQuiz(quiz1)
         var savedquiz =quizDao.getQuizById(quiz.id)
         if ( savedquiz != null) {
             return QuizEntity(

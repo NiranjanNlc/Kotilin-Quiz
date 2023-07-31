@@ -188,6 +188,7 @@ class QuizFragment : Fragment(), View.OnClickListener {
         val selectedOptionView = getOptionViewByPosition(selectedOptionPosition)
         Log.i("startquiz", "handleSubmission: $selectedOptionView "+ selectedOptionPosition)
         if (isCorrect) {
+            currentQuestion.
             selectedOptionView.background = ContextCompat.getDrawable(
                 requireContext(),
                 R.drawable.correct_option_border_bg

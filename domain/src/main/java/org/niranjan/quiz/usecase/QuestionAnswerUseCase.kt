@@ -49,6 +49,7 @@ class QuestionAnswerUseCase(
 
     private fun updateScoreForQuiz(quizId: String) {
         val quizScores = scoreRepository.getScoresByQuiz(quizId)
+        Log.i("result", "updateScoreForQuiz: ${quizScores?.sumBy { it.score }}")
         for (score in quizScores) {
             val newScoreValue = score.score + 1
             scoreRepository.saveScore(score.copy(score = newScoreValue))

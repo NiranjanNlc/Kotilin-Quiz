@@ -77,6 +77,7 @@ class QuizViewModel @Inject constructor(
 
 
     fun moveToNextQuestion(currentQuestionId: QuestionEntity, isCorrect: Boolean) {
+        Log.i("result + ", isCorrect.toString())
         viewModelScope.launch(Dispatchers.IO) {
             val result = useCase.answerQuestionAndGetNext(
                 currentQuestionId,

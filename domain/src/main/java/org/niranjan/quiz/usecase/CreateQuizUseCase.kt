@@ -17,10 +17,9 @@ class CreateQuizUseCase(
     fun startQuiz(user: String): QuizResult  {
       try {
           val randomQuestions = getRandomQuizQuestions(5)
-          val userEntity = UserEntity(username = user)
           Log.i("startquiz", "startQuiz: ${randomQuestions.size}")
           return if (randomQuestions.isNotEmpty()) {
-              QuizResult.Success(createQuiz(userEntity, randomQuestions))
+              QuizResult.Success(createQuiz(user, randomQuestions))
           } else {
               Log.i("startquiz", "startQuiz: null")
               QuizResult.Failure("No questions found")
@@ -30,10 +29,10 @@ class CreateQuizUseCase(
       }
     }
 
-    public fun createQuiz(user: UserEntity, randomQuestions: List<QuestionEntity>): QuizEntity {
+    public fun createQuiz(user: String, randomQuestions: List<QuestionEntity>): QuizEntity {
         val quiz = QuizEntity(
             UUID.randomUUID().toString(),
-            user.userId,
+            user,
             randomQuestions,
             emptyList(),
             System.currentTimeMillis(),
