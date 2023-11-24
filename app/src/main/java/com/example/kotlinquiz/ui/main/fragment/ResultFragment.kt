@@ -11,10 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.kotlinquiz.R
 import com.example.kotlinquiz.databinding.FragmentResultBinding
+import com.example.kotlinquiz.ui.main.util.QuizPrefsHelper
 import com.example.kotlinquiz.ui.main.util.ResultState
 import com.example.kotlinquiz.ui.main.viewmodal.QuizViewModel
 import com.example.kotlinquiz.ui.main.viewmodal.ResultViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ResultFragment : Fragment() {
@@ -26,7 +28,8 @@ class ResultFragment : Fragment() {
     private lateinit var binding : FragmentResultBinding
 
     private val viewModel: ResultViewModel by viewModels()
-
+    @Inject
+    lateinit var prefsHelper: QuizPrefsHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,7 +62,9 @@ class ResultFragment : Fragment() {
         }
 
         btnFinish.setOnClickListener {
+            prefsHelper.saveQuizStatus(false,"")
             findNavController().navigate(R.id.action_resultFragment_to_welcomeFragment)
+
         }
     }
 
