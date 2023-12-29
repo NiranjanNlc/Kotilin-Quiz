@@ -81,7 +81,7 @@ class QuizFragment : Fragment(), View.OnClickListener {
                     // Handle failure state if needed
                     Toast.makeText(requireContext(), state.errorMessage, Toast.LENGTH_SHORT).show()
                 }
-                is AnswerState.Loading -> {
+                is AnswerState.NotAnswered -> {
                     // Handle loading state if needed
                     Toast.makeText(requireContext()," Answer Please ", Toast.LENGTH_SHORT).show()
                     // For example, you might show a progress bar

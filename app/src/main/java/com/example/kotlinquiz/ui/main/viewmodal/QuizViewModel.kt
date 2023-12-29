@@ -46,7 +46,7 @@ class QuizViewModel @Inject constructor(
         when (result) {
             is AnswerResult.Success -> {
                 try {
-                    Log.i("startquiz", "fuck you : $result")
+                    Log.i("startquiz", "your result  : $result")
                     _answerState.postValue(
                         AnswerState.Success(
                             result.question,
@@ -88,7 +88,7 @@ class QuizViewModel @Inject constructor(
     }
 
     fun resetStaet() {
-        _answerState.value = null
+        _answerState.value = AnswerState.NotAnswered
     }
 
 }
