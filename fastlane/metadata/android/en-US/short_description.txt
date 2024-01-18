@@ -1,3 +1,1 @@
-Quiz taking application about kotilin
-
-
+Quiz taking application about Kotlin
