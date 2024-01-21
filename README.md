@@ -1,6 +1,10 @@
 # Kotlin Quiz App
 Kotlin Quiz is an engaging Android application that allows users to test their knowledge in Kotilin Programming language through fun and interactive quizzes. This app is built with a clean code architecture following the MVVM pattern, ensuring maintainability and scalability. The app comprises three main layers: App (Presentation), Domain, and Data, each with its unique set of responsibilities.
 
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="80">](https://f-droid.org/packages/com.example.kotlinquiz/)
+
 ## Screenshots
 <p align="center" padding = "40" >
     <img src="https://github.com/NiranjanNlc/Kotilin-Quiz/assets/25600880/b77fea82-e8ef-42c5-b318-177e1149474f.png" alt="Screenshot 4" width="200"/>
