@@ -14,3 +14,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+# Kotlin 2.x (K2) compiler caches/metadata
+.kotlin/
+# Project-local tmp dir created for kapt SQLite workaround (no longer used,
+# but keep ignored in case it gets recreated)
+.gradle-tmp/
