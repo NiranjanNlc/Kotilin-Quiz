@@ -15,6 +15,9 @@ class QuestionAnswerUseCase(
     private val scoreRepository: ScoreRepository
 ) {
 
+    fun getQuizQuestionCount(): Int =
+        quizRepository.getCurrentQuiz()?.questions?.size ?: 0
+
     fun getFirstQuestion(): AnswerResult {
         Log.i(TAG, "getFirstQuestion: Going to the first question.")
         val quiz = quizRepository.getCurrentQuiz()

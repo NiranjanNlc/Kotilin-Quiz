@@ -29,12 +29,17 @@ class QuizViewModel @Inject constructor(
     private val _answerState  = MutableLiveData<AnswerState>()
     val answerState: LiveData<AnswerState> get() = _answerState
 
+    private var questionIndex = 0
+    private var totalQuestions = 0
+
     init {
         _selectedOptionPosition.value = 0
     }
 
     fun getFirstQuestion() {
+        questionIndex = 0
         viewModelScope.launch(Dispatchers.IO) {
+            totalQuestions = useCase.getQuizQuestionCount()
             val result = useCase.getFirstQuestion()
             Log.i("startquiz", "getFirstQuestion: $result")
             Log.i("startquiz", result.toString())
@@ -83,11 +88,18 @@ class QuizViewModel @Inject constructor(
                 currentQuestionId,
                 isCorrect
             )
-            hadleResult(result)
+            questionIndex++
+            if (questionIndex >= totalQuestions) {
+                hadleResult(AnswerResult.Success(null, isLastQuestion = true))
+            } else {
+                hadleResult(result)
+            }
         }
     }
 
     fun resetStaet() {
+        questionIndex = 0
+        totalQuestions = 0
         _answerState.value = AnswerState.NotAnswered
     }
 
