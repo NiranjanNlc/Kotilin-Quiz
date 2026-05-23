@@ -101,4 +101,10 @@ class QuizRepoImpl( private val quizDao: QuizDao) : QuizRepository {
             isFinished = quiz.isFinished)
 
     }
+
+    override fun finishUnfinishedQuizzes() {
+        quizDao.getAllUnfineshedQuiz().forEach { quiz ->
+            quizDao.updateQuiz(quiz.copy(isFinished = true))
+        }
+    }
 }

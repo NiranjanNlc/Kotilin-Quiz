@@ -45,11 +45,13 @@ class ResultFragment : Fragment() {
         val tvScore: TextView = binding.tvScore
         val btnFinish: Button = binding.btnFinish
 
+        viewModel.loadResult(prefsHelper.getQuizId())
+
         viewModel.resultState.observe(viewLifecycleOwner){
             when(it){
                 is ResultState.Success -> {
                     tvName.text = it.user
-                    tvScore.text = "Your Score is ${it.score}  "
+                    tvScore.text = "Your Score is ${it.score} out of ${it.totalQuestions}"
                 }
                 is ResultState.Failure -> {
                     tvName.text = it.errorMessage

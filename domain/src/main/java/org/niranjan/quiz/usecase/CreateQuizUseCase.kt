@@ -33,10 +33,12 @@ class CreateQuizUseCase(
     }
 
     public fun createQuiz(user: String, randomQuestions: List<QuestionEntity>): QuizEntity {
+        quizRepository.finishUnfinishedQuizzes()
+        val freshQuestions = randomQuestions.map { it.copy(isAnswered = false) }
         val quiz = QuizEntity(
             UUID.randomUUID().toString(),
             user,
-            randomQuestions,
+            freshQuestions,
             emptyList(),
             System.currentTimeMillis(),
             1200000

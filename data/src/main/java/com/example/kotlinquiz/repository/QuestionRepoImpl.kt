@@ -29,6 +29,11 @@ class QuestionRepoImpl @Inject constructor(private val questionDao: QuestionDao,
          )
     }
 
+    override fun resetQuestionAnswered(question: QuestionEntity) {
+        val existing = questionDao.getQuestionById(question.questionId) ?: return
+        questionDao.updateQuestion(existing.copy(isAnswered = false))
+    }
+
     override fun updateQuestionAsAnswered(question: QuestionEntity) {
         val check1 = questionDao.getQuestionById(question.questionId)
         questionDao.updateQuestion( check1?.copy(isAnswered = true)!!)

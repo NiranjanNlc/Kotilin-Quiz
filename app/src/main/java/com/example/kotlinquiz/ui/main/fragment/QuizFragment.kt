@@ -95,6 +95,7 @@ class QuizFragment : Fragment(), View.OnClickListener {
             binding.tvQuestion.text = it.text
             setOptionTexts(it.answers)
         }
+        awaitingNextQuestion = false
         setDefaultOptionsView()
     }
 
@@ -123,7 +124,10 @@ class QuizFragment : Fragment(), View.OnClickListener {
         }
         binding.btnSubmit.text = " Submit "
     }
-    private fun setSelectedOptionView(view: TextView, selectedOptionNum: Int) {
+    private val optionViews: List<TextView>
+        get() = listOf(binding.tvOptionOne, binding.tvOptionTwo, binding.tvOptionThree)
+
+    private fun setSelectedOptionView(view: TextView) {
         setDefaultOptionsView()
         view.setTextColor(Color.parseColor("#363A43"))
         view.setTypeface(view.typeface, Typeface.BOLD)
@@ -135,75 +139,59 @@ class QuizFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View) {
         when (view.id) {
-            binding.tvOptionOne.id -> {
-                handleOptionSelection(1)
-            }
-            binding.tvOptionTwo.id -> {
-                handleOptionSelection(2)
-            }
-            binding.tvOptionThree.id -> {
-                handleOptionSelection(3)
-            }
-            binding.btnSubmit.id -> {
-                handleSubmission()
-            }
+            binding.tvOptionOne.id -> handleOptionSelection(0)
+            binding.tvOptionTwo.id -> handleOptionSelection(1)
+            binding.tvOptionThree.id -> handleOptionSelection(2)
+            binding.btnSubmit.id -> handleSubmission()
         }
     }
 
-    private fun handleOptionSelection(selectedOptionPosition: Int) {
-        viewModel.onOptionSelected(selectedOptionPosition)
-        setSelectedOptionView(getOptionViewByPosition(selectedOptionPosition), selectedOptionPosition)
+    private fun handleOptionSelection(answerIndex: Int) {
+        val answer = currentQuestion.answers.getOrNull(answerIndex) ?: return
+        viewModel.onOptionSelected(answer.id)
+        setSelectedOptionView(optionViews[answerIndex])
     }
 
+    private var awaitingNextQuestion = false
+
     private fun handleSubmission() {
-        val selectedOptionPosition = viewModel.selectedOptionPosition.value ?: 0
-        if (selectedOptionPosition != 0) {
-            val isCorrect = checkAnswer(selectedOptionPosition)
-            Log.i("startquiz", "qs status : ${currentQuestion.isAnswered} ")
-            if (currentQuestion.isAnswered == true) {
-                Log.i("startquiz", "handleSubmission:  answered ")
-                viewModel.moveToNextQuestion(currentQuestion, isCorrect)
+        val selectedAnswerId = viewModel.selectedAnswerId.value
+        if (selectedAnswerId != null) {
+            if (awaitingNextQuestion) {
+                awaitingNextQuestion = false
+                viewModel.advanceToNextQuestion()
                 enableDisableOptionClicks(true)
                 setDefaultOptionsView()
-            }
-            else
-            {
-                Log.i("startquiz", "handleSubmission: not answered ")
-                Log.i("startquiz", "handleSubmission: $isCorrect")
+            } else {
+                val isCorrect = checkAnswer(selectedAnswerId)
+                Log.i("startquiz", "handleSubmission: correct=$isCorrect")
                 showAnswerFeedback(isCorrect)
-                // Disable clicking on options after submitting the answer
+                viewModel.submitAnswer(currentQuestion, isCorrect)
                 enableDisableOptionClicks(false)
-                currentQuestion.isAnswered = true
+                awaitingNextQuestion = true
                 binding.btnSubmit.text = "Get next question"
             }
-
-
         } else {
-            // Show an error message to select an option
+            Toast.makeText(requireContext(), "Please select an option", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun showAnswerFeedback(isCorrect: Boolean) {
-
-        Log.i("startquiz", "handleSubmission: not answered "+isCorrect)
-        val selectedOptionPosition = viewModel.selectedOptionPosition.value ?: 0
-        val selectedOptionView = getOptionViewByPosition(selectedOptionPosition)
-        Log.i("startquiz", "handleSubmission: $selectedOptionView "+ selectedOptionPosition)
+        val selectedAnswerId = viewModel.selectedAnswerId.value ?: return
+        val selectedOptionView = getOptionViewByAnswerId(selectedAnswerId) ?: return
+        Log.i("startquiz", "handleSubmission: not answered $isCorrect")
         if (isCorrect) {
             selectedOptionView.background = ContextCompat.getDrawable(
                 requireContext(),
                 R.drawable.correct_option_border_bg
             )
         } else {
-            selectedOptionView?.background = ContextCompat.getDrawable(
+            selectedOptionView.background = ContextCompat.getDrawable(
                 requireContext(),
                 R.drawable.incorrect_option_border_bg
             )
-            // Highlight the correct answer if the user selected the wrong one
-            val correctAnswerPosition = currentQuestion.answers.indexOfFirst { it.isCorrect }
-            Log.i("startquiz", "correcrtAnswerPosition: $correctAnswerPosition ")
-            val correctAnswerView = getOptionViewByPosition(correctAnswerPosition)
-            Log.i("startquiz", "handleSubmission snser checking : $correctAnswerView "+ correctAnswerPosition)
+            val correctAnswerId = currentQuestion.correctAnswer?.id ?: return
+            val correctAnswerView = getOptionViewByAnswerId(correctAnswerId) ?: return
             correctAnswerView.background = ContextCompat.getDrawable(
                 requireContext(),
                 R.drawable.correct_option_border_bg
@@ -217,19 +205,12 @@ class QuizFragment : Fragment(), View.OnClickListener {
         binding.tvOptionThree.isClickable = clickable
     }
 
-    private fun getOptionViewByPosition(position: Int): TextView {
-
-        return when (position) {
-            0->  binding.tvOptionOne
-            1 -> binding.tvOptionOne
-            2 -> binding.tvOptionTwo
-            3 -> binding.tvOptionThree
-            else -> throw IllegalArgumentException("Invalid option position")
-        }
+    private fun getOptionViewByAnswerId(answerId: String): TextView? {
+        val answerIndex = currentQuestion.answers.indexOfFirst { it.id == answerId }
+        return optionViews.getOrNull(answerIndex)
     }
 
-    fun checkAnswer(selectedOptionPosition: Int): Boolean {
-        val correctAnswerPosition = currentQuestion.answers.indexOfFirst { it.isCorrect }
-        return selectedOptionPosition==correctAnswerPosition
+    fun checkAnswer(selectedAnswerId: String): Boolean {
+        return selectedAnswerId == currentQuestion.correctAnswer?.id
     }
 }

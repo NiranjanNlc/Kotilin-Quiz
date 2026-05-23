@@ -7,6 +7,7 @@ import org.niranjan.quiz.modal.QuestionEntity
 interface QuestionRepository {
     fun createQuestion(question: QuestionEntity)
     fun updateQuestionAsAnswered(question: QuestionEntity)
+    fun resetQuestionAnswered(question: QuestionEntity)
     fun deleteQuestion(questionId: String)
     fun getQuestionById(questionId: String): QuestionEntity?
     fun putallQuestion(): List<QuestionEntity>

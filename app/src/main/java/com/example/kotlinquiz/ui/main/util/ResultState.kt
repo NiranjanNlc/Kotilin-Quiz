@@ -4,7 +4,7 @@ import org.niranjan.quiz.modal.QuestionEntity
 
 sealed class ResultState {
     object Loading : ResultState()
-    data class Success(val user: String, val score: Int) : ResultState()
+    data class Success(val user: String, val score: Int, val totalQuestions: Int) : ResultState()
     data class Failure(val errorMessage: String) : ResultState()
 
 }

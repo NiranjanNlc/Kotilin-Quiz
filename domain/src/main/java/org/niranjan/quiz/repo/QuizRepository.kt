@@ -13,4 +13,5 @@ interface QuizRepository {
     fun getQuizScores(quizId: String): List<ScoreEntity>
     fun getCurrentQuiz(): QuizEntity?
     fun getLastFinishedQuiz(): QuizEntity?
+    fun finishUnfinishedQuizzes()
     }
