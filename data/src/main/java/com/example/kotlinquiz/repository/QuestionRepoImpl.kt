@@ -71,13 +71,27 @@ class QuestionRepoImpl @Inject constructor(private val questionDao: QuestionDao,
          }
     }
     override fun putallQuestion(): List<QuestionEntity> {
-            val jsonString =   readJsonFileFromAssets(this.context)
+            val cachedQuestions = questionDao.getAllQuestion()
+            if (cachedQuestions.isNotEmpty()) {
+                return cachedQuestions.map {
+                    QuestionEntity(
+                        it.questionId,
+                        it.text,
+                        it.answers,
+                        it.difficultyLevel,
+                        it.category,
+                        it.correctAnswer,
+                        it.isAnswered,
+                    )
+                }
+            }
+
+            val jsonString = readJsonFileFromAssets(this.context)
             Log.i(" string ", jsonString)
             val json = JSONObject(jsonString)
             val questionsArray = json.getJSONArray("questions")
             val questionsList = mutableListOf<Question>()
-            val randomIndexes = generateRandomIndexes(questionsArray.length(), 10)
-            for (i in randomIndexes) {
+            for (i in 0 until questionsArray.length()) {
                 val questionJson = questionsArray.getJSONObject(i)
                 val questionId = questionJson.getString("questionId")
                 val text = questionJson.getString("text")

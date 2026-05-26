@@ -9,4 +9,5 @@ interface ScoreRepository {
     fun getScoresByQuiz(quizId: String): List<ScoreEntity>
     fun getScoresByUser(userId: String): List<ScoreEntity>
     fun gethighestFivecore():List<ScoreEntity>
+    fun getTopScores(limit: Int): List<ScoreEntity>
 }

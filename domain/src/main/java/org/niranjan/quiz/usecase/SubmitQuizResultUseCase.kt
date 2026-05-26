@@ -17,9 +17,34 @@ class SubmitQuizResultUseCase(
         if (quiz != null) {
             val correctCount = scoreRepository.getScoresByQuiz(quiz.id).sumOf { it.score }
             val totalQuestions = quiz.questions.size
+            val topScores = scoreRepository.getTopScores(LEADERBOARD_SIZE)
+            val leaderboard = topScores.mapIndexed { index, entry ->
+                FinalResult.LeaderboardEntry(
+                    rank = index + 1,
+                    userName = entry.userId,
+                    score = entry.score,
+                    isCurrentUser = entry.userId == quiz.userId && entry.quizId == quiz.id,
+                )
+            }
+            val userRank = leaderboard
+                .firstOrNull { it.isCurrentUser }
+                ?.rank
+            val isOnLeaderboard = userRank != null
+
             Log.i("result", "submitQuizResult: $correctCount / $totalQuestions for ${quiz.userId}")
-            return FinalResult.Success(quiz.userId, correctCount, totalQuestions)
+            return FinalResult.Success(
+                user = quiz.userId,
+                score = correctCount,
+                totalQuestions = totalQuestions,
+                leaderboard = leaderboard,
+                isOnLeaderboard = isOnLeaderboard,
+                userRank = userRank,
+            )
         }
         return FinalResult.Failure("Quiz not found")
+    }
+
+    companion object {
+        private const val LEADERBOARD_SIZE = 10
     }
 }
