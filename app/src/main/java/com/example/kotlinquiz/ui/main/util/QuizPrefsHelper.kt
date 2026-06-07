@@ -25,7 +25,7 @@ class QuizPrefsHelper @Inject constructor (private val context: Context) {
     }
 
     fun getQuizId(): String? {
-         return  sharedPreferences.getString(KEY_QUIZ_ID,"74554tyw98e84949")
+        return sharedPreferences.getString(KEY_QUIZ_ID, null)
     }
 
     companion object {

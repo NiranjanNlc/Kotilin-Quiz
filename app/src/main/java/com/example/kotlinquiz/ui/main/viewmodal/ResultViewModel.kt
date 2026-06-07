@@ -19,16 +19,18 @@ class ResultViewModel @Inject constructor(
      private val _resultState  = MutableLiveData<ResultState>()
     val resultState: LiveData<ResultState> get() = _resultState
 
-    init {
-        getMyResult()
-    }
-
-    fun getMyResult(){
-        val result = useCase.submitQuizResult()
-        Log.i("ResultViewModel", "getMyResult: $result")
+    fun loadResult(quizId: String?) {
+        if (quizId.isNullOrBlank()) {
+            _resultState.postValue(ResultState.Failure("Quiz not found"))
+            return
+        }
+        val result = useCase.submitQuizResult(quizId)
+        Log.i("ResultViewModel", "loadResult: $result")
         when(result){
             is FinalResult.Success -> {
-                _resultState.postValue(ResultState.Success(result.user, result.score))
+                _resultState.postValue(
+                    ResultState.Success(result.user, result.score, result.totalQuestions)
+                )
             }
             is FinalResult.Failure -> {
                 _resultState.postValue(ResultState.Failure(result.errorMessage))
