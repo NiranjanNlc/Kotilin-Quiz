@@ -23,4 +23,7 @@ interface ScoreDao {
 
     @Query("SELECT * FROM scores WHERE userId = :userId")
     fun getScoresByUser(userId: String): List<Score>
+
+    @Query("SELECT * FROM scores ORDER BY score DESC, scoreId ASC LIMIT :limit")
+    fun getTopScores(limit: Int): List<Score>
 }

@@ -34,8 +34,12 @@ class ScoreRepositoryImpl(private val scoreDao: ScoreDao) : ScoreRepository {
     }
 
     override fun gethighestFivecore(): List<ScoreEntity> {
-        TODO("Not yet implemented")
+        return getTopScores(5)
     }
 
-
+    override fun getTopScores(limit: Int): List<ScoreEntity> {
+        return scoreDao.getTopScores(limit).map {
+            ScoreEntity(it.scoreId, it.userId, it.quizId, it.score, 0L)
+        }
+    }
 }

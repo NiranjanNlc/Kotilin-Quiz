@@ -19,7 +19,7 @@ class CreateQuizUseCase(
 
     fun startQuiz(user: String): QuizResult  {
       try {
-          val randomQuestions = getRandomQuizQuestions(5)
+          val randomQuestions = getRandomQuizQuestions(QUIZ_QUESTION_COUNT)
           Log.i("startquiz", "startQuiz: ${randomQuestions.size}")
           return if (randomQuestions.isNotEmpty()) {
               QuizResult.Success(createQuiz(user, randomQuestions))
@@ -63,5 +63,7 @@ class CreateQuizUseCase(
         return allQuestions.shuffled().take(questionCount)
     }
 
-
+    companion object {
+        const val QUIZ_QUESTION_COUNT = 20
+    }
 }

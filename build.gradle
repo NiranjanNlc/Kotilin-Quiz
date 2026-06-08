@@ -90,6 +90,7 @@ plugins {
     id 'com.android.application' version '9.2.0' apply false
     id 'com.android.library' version '9.2.0' apply false
     id 'org.jetbrains.kotlin.android' version '2.3.21' apply false
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.3.21' apply false
     id 'org.jetbrains.kotlin.kapt' version '2.3.21' apply false
     // KSP is required because Hilt's kapt path is incompatible with AGP 9 +
     // android.builtInKotlin=false. KSP works out of the box with AGP 9.
